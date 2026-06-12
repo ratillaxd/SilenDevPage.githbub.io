@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SilenDev | Official Presentation</title>
+    
+    <!-- Tailwind CSS for a clean and modern design -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0b0b0f',
+                        cardBg: '#121218',
+                        accent: '#00f0ff',
+                        accentHover: '#33f3ff',
+                        textMuted: '#94a3b8'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            scroll-behavior: smooth;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0b0f;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #22222b;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00f0ff;
+        }
+
+        /* Epic Glitch / Neon Pulse Scanline Animation */
+        @keyframes cyber-scan {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+        .cyber-flash {
+            position: relative;
+            overflow: hidden;
+        }
+        .cyber-flash::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -50%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(
+                to right,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(0, 240, 255, 0.1) 30%,
+                rgba(0, 240, 255, 0.4) 50%,
+                rgba(0, 240, 255, 0.1) 70%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: translateX(-100%) rotate(45deg);
+            transition: all 0.6s ease;
+            pointer-events: none;
+        }
+        .cyber-flash:hover::after {
+            transform: translateX(100%) rotate(45deg);
+        }
+
+        /* Initial page fade-in animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(200px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        .reveal-node {
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+    </style>
+</head>
+<body class="bg-darkBg text-white min-h-screen flex flex-col justify-between selection:bg-accent selection:text-black">
+
+    <!-- Simple Navigation -->
+    <nav class="border-b border-zinc-900 sticky top-0 bg-darkBg/90 backdrop-blur-md z-50 px-6 py-4">
+        <div class="max-w-4xl mx-auto flex justify-between items-center">
+            <span class="text-lg font-extrabold tracking-wider bg-gradient-to-r from-white to-accent bg-clip-text text-transparent">SILENDEV</span>
+            <div class="flex gap-5 text-xs font-semibold tracking-wide text-textMuted">
+                <a href="#about" class="hover:text-accent transition-colors">About Me</a>
+                <a href="#projects" class="hover:text-accent transition-colors">Projects</a>
+                <a href="#assets" class="hover:text-accent transition-colors">Assets</a>
+                <a href="#social" class="hover:text-accent transition-colors">Socials</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-3xl mx-auto px-6 py-12 space-y-20 flex-grow w-full">
+
+        <!-- SECTION: About Me -->
+        <section id="about" class="text-center pt-6 reveal-node" style="animation-delay: 100ms;">
+            <!-- Profile Image -->
+            <img src="Images/TS Icon.png" alt="SilenDev" class="w-22 h-22 object-cover rounded-full mx-auto mb-6 border border-zinc-800 shadow-lg shadow-accent/10 hover:scale-105 hover:border-accent transition-all duration-300 cursor-pointer">
+            
+            <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-3">SilenDev</h1>
+            <p class="text-accent font-semibold tracking-wider text-xs uppercase mb-4">Game Developer & Asset Creator</p>
+            <p class="text-textMuted max-w-xl mx-auto text-sm sm:text-base leading-relaxed">
+                Hello, I am an indie developer focused on crafting interactive experiences and optimizing production-ready 3D environments for game engines.
+            </p>
+        </section>
+
+        <!-- SECTION: My Story -->
+        <section id="story" class="bg-cardBg p-8 rounded-xl border border-zinc-900/50 relative overflow-hidden reveal-node" style="animation-delay: 200ms;">
+            <div class="absolute top-0 left-0 w-1 h-full bg-accent"></div>
+            <h2 class="text-sm font-bold uppercase tracking-widest text-accent mb-3">My Story</h2>
+            <p class="text-zinc-300 text-sm leading-relaxed">
+                My development journey started as a self-taught creator, driven by curiosity about how virtual worlds are built. Over time, I discovered that optimization and modular design are key pillars for creating smooth, fluid gameplay. That's why, along with bringing my own ideas and mechanics to life, I dedicate myself to modeling clean, efficient, and accessible assets so other creators can accelerate their workflows without sacrificing performance.
+            </p>
+        </section>
+
+        <!-- SECTION: My Projects -->
+        <section id="projects" class="space-y-6 reveal-node" style="animation-delay: 300ms;">
+            <div class="border-b border-zinc-900 pb-2">
+                <h2 class="text-lg font-bold tracking-tight flex items-center gap-2">
+                    <span class="w-1.5 h-4 bg-accent rounded-full"></span> My Projects
+                </h2>
+            </div>
+            
+            <!-- Project Buttons Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                
+                <!-- Project 1 Button -->
+                <a href="https://silendev7131.itch.io/the-silence" target="_blank" class="cyber-flash group block text-left bg-cardBg border border-zinc-900 rounded-xl overflow-hidden hover:border-accent hover:shadow-[0_0_25px_rgba(0,240,255,0.15)] transition-all duration-300 w-full focus:outline-none focus:ring-1 focus:ring-accent transform hover:-translate-y-1">
+                    <!-- Image Container -->
+                    <div class="w-full h-40 bg-zinc-900 bg-cover bg-center transition-transform duration-700 group-hover:scale-105 flex items-center justify-center text-zinc-700 text-xs font-mono" style="background-image: url('Images/Captura\ de\ pantalla\ \(1182\).png');">
+                        
+                    </div>
+                    <!-- Name Below -->
+                    <div class="p-4 bg-zinc-950/40 relative z-10">
+                        <h3 class="font-bold text-sm tracking-wide group-hover:text-accent transition-colors flex justify-between items-center">
+                            <span>The Silence: The Forest</span>
+                            <span class="text-[10px] bg-accent/10 text-accent px-2 py-0.5 rounded border border-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">OPEN &rarr;</span>
+                        </h3>
+                        <p class="text-xs text-textMuted mt-0.5">Survival / Unity Engine</p>
+                    </div>
+                </a>
+
+                <!-- Project 2 Button -->
+                <a href="https://silendev7131.itch.io/slenderman-the-tall-silhouette" target="_blank" class="cyber-flash group block text-left bg-cardBg border border-zinc-900 rounded-xl overflow-hidden hover:border-accent hover:shadow-[0_0_25px_rgba(0,240,255,0.15)] transition-all duration-300 w-full focus:outline-none focus:ring-1 focus:ring-accent transform hover:-translate-y-1">
+                    <div class="w-full h-40 bg-zinc-900 bg-cover bg-center transition-transform duration-700 group-hover:scale-105 flex items-center justify-center text-zinc-700 text-xs font-mono" style="background-image: url('Images/Capsula\ Main.jpg');">
+                        
+                    </div>
+                    <div class="p-4 bg-zinc-950/40 relative z-10">
+                        <h3 class="font-bold text-sm tracking-wide group-hover:text-accent transition-colors flex justify-between items-center">
+                            <span>Slenderman: The Tall Silhouette</span>
+                            <span class="text-[10px] bg-accent/10 text-accent px-2 py-0.5 rounded border border-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">OPEN &rarr;</span>
+                        </h3>
+                        <p class="text-xs text-textMuted mt-0.5">Survival / Fangame / Unity Engine</p>
+                    </div>
+                </a>
+
+            </div>
+        </section>
+
+        <!-- SECTION: My Assets -->
+        <section id="assets" class="space-y-6 reveal-node" style="animation-delay: 400ms;">
+            <div class="border-b border-zinc-900 pb-2">
+                <h2 class="text-lg font-bold tracking-tight flex items-center gap-2">
+                    <span class="w-1.5 h-4 bg-accent rounded-full"></span> My Assets (Unity Store)
+                </h2>
+            </div>
+
+            <!-- Assets Buttons Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                
+                <!-- Asset Pack 1 Button -->
+                <a href="https://assetstore.unity.com" target="_blank" class="cyber-flash group block text-left bg-cardBg border border-zinc-900 rounded-xl overflow-hidden hover:border-accent hover:shadow-[0_0_25px_rgba(0,240,255,0.15)] transition-all duration-300 w-full focus:outline-none focus:ring-1 focus:ring-accent transform hover:-translate-y-1">
+                    <div class="w-full h-40 bg-zinc-900 bg-cover bg-center transition-transform duration-700 group-hover:scale-105 flex items-center justify-center text-zinc-700 text-xs font-mono" style="background-image: url('url_de_tu_imagen_asset1.jpg');">
+                        [ Warehouse Pack Thumbnail ]
+                    </div>
+                    <div class="p-4 bg-zinc-950/40 relative z-10">
+                        <h3 class="font-bold text-sm tracking-wide group-hover:text-accent transition-colors flex justify-between items-center">
+                            <span>Warehouse Props Pack</span>
+                            <span class="text-[10px] bg-accent/10 text-accent px-2 py-0.5 rounded border border-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">VIEW &rarr;</span>
+                        </h3>
+                        <p class="text-xs text-textMuted mt-0.5">Modular shelving and crate variants</p>
+                    </div>
+                </a>
+
+                <!-- Asset Pack 2 Button -->
+                
+
+            </div>
+        </section>
+
+        <!-- SECTION: Social Networks -->
+        <section id="social" class="space-y-6 reveal-node" style="animation-delay: 500ms;">
+            <div class="border-b border-zinc-900 pb-2">
+                <h2 class="text-lg font-bold tracking-tight flex items-center gap-2">
+                    <span class="w-1.5 h-4 bg-accent rounded-full"></span> My Social Networks
+                </h2>
+            </div>
+            
+            <!-- Socials Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                
+                <a href="https://www.youtube.com/@SilenDev" target="_blank" class="cyber-flash flex items-center justify-between p-3.5 bg-cardBg border border-zinc-900/60 rounded-xl hover:border-accent hover:bg-zinc-900/40 hover:shadow-[0_0_15px_rgba(0,240,255,0.1)] transition-all duration-300 group transform hover:-translate-y-0.5">
+                    <span class="text-xs font-semibold tracking-wide group-hover:text-accent transition-colors">YouTube</span>
+                    <span class="text-[10px] text-zinc-600 group-hover:text-accent/70 transition-colors font-mono">&nearr;</span>
+                </a>
+
+                <a href="https://www.tiktok.com/@ratilla7131" target="_blank" class="cyber-flash flex items-center justify-between p-3.5 bg-cardBg border border-zinc-900/60 rounded-xl hover:border-accent hover:bg-zinc-900/40 hover:shadow-[0_0_15px_rgba(0,240,255,0.1)] transition-all duration-300 group transform hover:-translate-y-0.5">
+                    <span class="text-xs font-semibold tracking-wide group-hover:text-accent transition-colors">TikTok</span>
+                    <span class="text-[10px] text-zinc-600 group-hover:text-accent/70 transition-colors font-mono">&nearr;</span>
+                </a>
+
+                <a href="https://www.instagram.com/ratilla7131/" target="_blank" class="cyber-flash flex items-center justify-between p-3.5 bg-cardBg border border-zinc-900/60 rounded-xl hover:border-accent hover:bg-zinc-900/40 hover:shadow-[0_0_15px_rgba(0,240,255,0.1)] transition-all duration-300 group transform hover:-translate-y-0.5">
+                    <span class="text-xs font-semibold tracking-wide group-hover:text-accent transition-colors">Instagram</span>
+                    <span class="text-[10px] text-zinc-600 group-hover:text-accent/70 transition-colors font-mono">&nearr;</span>
+                </a>
+
+                <a href="https://www.facebook.com/profile.php?id=61590585686832&locale=es_LA" target="_blank" class="cyber-flash flex items-center justify-between p-3.5 bg-cardBg border border-zinc-900/60 rounded-xl hover:border-accent hover:bg-zinc-900/40 hover:shadow-[0_0_15px_rgba(0,240,255,0.1)] transition-all duration-300 group transform hover:-translate-y-0.5">
+                    <span class="text-xs font-semibold tracking-wide group-hover:text-accent transition-colors">Facebook</span>
+                    <span class="text-[10px] text-zinc-600 group-hover:text-accent/70 transition-colors font-mono">&nearr;</span>
+                </a>
+
+                <a href="https://x.com/SilenDev7131" target="_blank" class="cyber-flash flex items-center justify-between p-3.5 bg-cardBg border border-zinc-900/60 rounded-xl hover:border-accent hover:bg-zinc-900/40 hover:shadow-[0_0_15px_rgba(0,240,255,0.1)] transition-all duration-300 group transform hover:-translate-y-0.5">
+                    <span class="text-xs font-semibold tracking-wide group-hover:text-accent transition-colors">Twitter (X)</span>
+                    <span class="text-[10px] text-zinc-600 group-hover:text-accent/70 transition-colors font-mono">&nearr;</span>
+                </a>
+
+                <a href="https://www.artstation.com/silendev" target="_blank" class="cyber-flash flex items-center justify-between p-3.5 bg-cardBg border border-zinc-900/60 rounded-xl hover:border-accent hover:bg-zinc-900/40 hover:shadow-[0_0_15px_rgba(0,240,255,0.1)] transition-all duration-300 group transform hover:-translate-y-0.5">
+                    <span class="text-xs font-semibold tracking-wide group-hover:text-accent transition-colors">ArtStation</span>
+                    <span class="text-[10px] text-zinc-600 group-hover:text-accent/70 transition-colors font-mono">&nearr;</span>
+                </a>
+
+                <a href="https://www.patreon.com/cw/SilenDev" target="_blank" class="cyber-flash flex items-center justify-between p-3.5 bg-cardBg border border-zinc-900/60 rounded-xl hover:border-accent hover:bg-zinc-900/40 hover:shadow-[0_0_15px_rgba(0,240,255,0.1)] transition-all duration-300 group transform hover:-translate-y-0.5">
+                    <span class="text-xs font-semibold tracking-wide group-hover:text-accent transition-colors">Patreon</span>
+                    <span class="text-[10px] text-zinc-600 group-hover:text-accent/70 transition-colors font-mono">&nearr;</span>
+                </a>
+
+                <a href="https://gamejolt.com/@SilenDev7131" target="_blank" class="cyber-flash flex items-center justify-between p-3.5 bg-cardBg border border-zinc-900/60 rounded-xl hover:border-accent hover:bg-zinc-900/40 hover:shadow-[0_0_15px_rgba(0,240,255,0.1)] transition-all duration-300 group transform hover:-translate-y-0.5">
+                    <span class="text-xs font-semibold tracking-wide group-hover:text-accent transition-colors">Game Jolt</span>
+                    <span class="text-[10px] text-zinc-600 group-hover:text-accent/70 transition-colors font-mono">&nearr;</span>
+                </a>
+
+                <a href="https://silendev7131.itch.io/" target="_blank" class="cyber-flash flex items-center justify-between p-3.5 bg-cardBg border border-zinc-900/60 rounded-xl hover:border-accent hover:bg-zinc-900/40 hover:shadow-[0_0_15px_rgba(0,240,255,0.1)] transition-all duration-300 group transform hover:-translate-y-0.5">
+                    <span class="text-xs font-semibold tracking-wide group-hover:text-accent transition-colors">itch.io</span>
+                    <span class="text-[10px] text-zinc-600 group-hover:text-accent/70 transition-colors font-mono">&nearr;</span>
+                </a>
+
+                <a href="https://www.deviantart.com/ratilla7131" target="_blank" class="cyber-flash flex items-center justify-between p-3.5 bg-cardBg border border-zinc-900/60 rounded-xl hover:border-accent hover:bg-zinc-900/40 hover:shadow-[0_0_15px_rgba(0,240,255,0.1)] transition-all duration-300 group transform hover:-translate-y-0.5">
+                    <span class="text-xs font-semibold tracking-wide group-hover:text-accent transition-colors">DeviantArt</span>
+                    <span class="text-[10px] text-zinc-600 group-hover:text-accent/70 transition-colors font-mono">&nearr;</span>
+                </a>
+
+                <a href="https://sketchfab.com/Ratilla7131" target="_blank" class="cyber-flash flex items-center justify-between p-3.5 bg-cardBg border border-zinc-900/60 rounded-xl hover:border-accent hover:bg-zinc-900/40 hover:shadow-[0_0_15px_rgba(0,240,255,0.1)] transition-all duration-300 group transform hover:-translate-y-0.5">
+                    <span class="text-xs font-semibold tracking-wide group-hover:text-accent transition-colors">Sketchfab</span>
+                    <span class="text-[10px] text-zinc-600 group-hover:text-accent/70 transition-colors font-mono">&nearr;</span>
+                </a>
+
+                <!-- Newgrounds -->
+                <a href="https://silendev.newgrounds.com/" target="_blank" class="cyber-flash flex items-center justify-between p-3.5 bg-cardBg/40 border border-zinc-900 rounded-xl hover:border-zinc-700 hover:shadow-[0_0_15px_rgba(255,255,255,0.05)] transition-all duration-300 group opacity-60 hover:opacity-100 transform hover:-translate-y-0.5">
+                    <span class="text-xs font-medium tracking-wide text-zinc-500 group-hover:text-zinc-300 transition-colors">Newgrounds <span class="text-[9px] text-zinc-600 block sm:inline sm:ml-1">(I don't use it xDD)</span></span>
+                    <span class="text-[10px] text-zinc-700 group-hover:text-zinc-400 transition-colors font-mono">&nearr;</span>
+                </a>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-zinc-900 py-8 px-6 text-center text-xs text-textMuted bg-black/40">
+        <p>&copy; 2026 SilenDev. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
