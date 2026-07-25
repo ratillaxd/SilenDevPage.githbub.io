@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Silence: The Forest - SilenDev Official Horror Experience</title>
+    <meta name="description" content="Official technical profile for The Silence: The Forest, an extreme first-person psychological horror survival game developed by SilenDev in Unity.">
+    
+
+    <!-- Icono en formato PNG -->
+    <link rel="icon" type="image/png" href="/Images/TS Icon.png">
+</head>
+    <!-- HORROR FONTS & ICONS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Eater&family=Nosifer&family=Special+Elite&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-black: #020001;
+            --blood-red: #8b0000;
+            --bright-blood: #ff0000;
+            --blood-dark: #3a0000;
+            --fog-gray: #1a1617;
+            --text-blood: #d6a7a7;
+            --text-bright: #f3ecec;
+            --font-horror: 'Nosifer', cursive;
+            --font-sub: 'Creepster', cursive;
+            --font-body: 'Special Elite', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            cursor: crosshair;
+        }
+
+        /* DARK AND RED SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #000;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--blood-red);
+            box-shadow: 0 0 10px var(--bright-blood);
+        }
+
+        body {
+            background-color: var(--bg-black);
+            background-image: 
+                radial-gradient(circle at center, rgba(139, 0, 0, 0.25) 0%, rgba(2, 0, 1, 0.98) 100%),
+                repeating-linear-gradient(0deg, rgba(0,0,0,0.1), rgba(0,0,0,0.1) 1px, transparent 1px, transparent 2px);
+            background-attachment: fixed;
+            color: var(--text-bright);
+            font-family: var(--font-body);
+            font-size: 1.15rem;
+            line-height: 1.7;
+            padding-bottom: 80px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* EXTREME VIGNETTE & HORROR SCANLINES */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: 
+                radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.95) 90%),
+                linear-gradient(180deg, rgba(255, 0, 0, 0.03) 50%, rgba(0,0,0,0.4) 50%);
+            background-size: 100% 100%, 100% 4px;
+            pointer-events: none;
+            z-index: 999;
+            animation: flickerVignette 0.15s infinite alternate;
+        }
+
+        @keyframes flickerVignette {
+            0% { opacity: 0.92; }
+            100% { opacity: 1; }
+        }
+
+        /* MAIN CONTAINER */
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* HEADER & LOGO */
+        header {
+            padding: 80px 20px 40px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .logo-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .game-logo {
+            max-width: 520px;
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 0 20px rgba(255, 0, 0, 0.8)) contrast(1.2);
+            animation: glitchEffect 3s infinite alternate;
+        }
+
+        /* GLITCH EFFECT */
+        @keyframes glitchEffect {
+            0% {
+                transform: translate(0);
+                filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.7));
+            }
+            92% {
+                transform: translate(0);
+            }
+            94% {
+                transform: translate(-3px, 2px) skewX(2deg);
+                filter: drop-shadow(-5px 0 25px rgba(255, 0, 0, 1));
+            }
+            96% {
+                transform: translate(3px, -1px) skewX(-2deg);
+                filter: drop-shadow(5px 0 25px rgba(139, 0, 0, 1));
+            }
+            98% {
+                transform: translate(-1px, -2px);
+            }
+            100% {
+                transform: translate(0);
+                filter: drop-shadow(0 0 30px rgba(255, 0, 0, 0.9));
+            }
+        }
+
+        /* SECTIONS & HEADINGS */
+        section {
+            margin-bottom: 70px;
+            position: relative;
+        }
+
+        h2 {
+            color: var(--bright-blood);
+            font-family: var(--font-horror);
+            font-size: 1.6rem;
+            margin-bottom: 25px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 0 0 15px var(--bright-blood), 3px 3px 0px #000;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 2px solid var(--blood-dark);
+            padding-bottom: 12px;
+        }
+
+        h2 i {
+            color: var(--bright-blood);
+            font-size: 1.8rem;
+            animation: pulseBlood 2s infinite alternate;
+        }
+
+        @keyframes pulseBlood {
+            0% { transform: scale(1); filter: drop-shadow(0 0 2px var(--bright-blood)); }
+            100% { transform: scale(1.15); filter: drop-shadow(0 0 12px var(--bright-blood)); }
+        }
+
+        /* CONTENT BOXES */
+        .horror-box {
+            background: linear-gradient(135deg, rgba(20, 2, 4, 0.9) 0%, rgba(5, 0, 1, 0.95) 100%);
+            padding: 35px;
+            border-radius: 4px;
+            border: 1px solid var(--blood-dark);
+            box-shadow: 0 0 35px rgba(0, 0, 0, 0.95), inset 0 0 20px rgba(139, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .horror-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 3px;
+            background: linear-gradient(90deg, transparent, var(--bright-blood), transparent);
+            box-shadow: 0 0 10px var(--bright-blood);
+        }
+
+        .horror-box p {
+            margin-bottom: 20px;
+            color: var(--text-bright);
+            text-shadow: 1px 1px 2px #000;
+        }
+
+        .horror-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        .highlight-text {
+            color: var(--bright-blood);
+            font-weight: bold;
+            font-family: var(--font-sub);
+            font-size: 1.3rem;
+            letter-spacing: 1px;
+        }
+
+        /* YOUTUBE VIDEO CONTAINER */
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            height: 0;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 2px solid var(--blood-red);
+            box-shadow: 0 0 40px rgba(139, 0, 0, 0.5), 0 0 10px #000 inset;
+            background: #000;
+            transition: all 0.4s ease;
+        }
+
+        .video-container:hover {
+            border-color: var(--bright-blood);
+            box-shadow: 0 0 50px rgba(255, 0, 0, 0.8);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border: 0;
+            filter: contrast(1.1) brightness(0.9);
+        }
+
+        /* TECHNICAL METADATA */
+        .game-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .meta-item {
+            background: rgba(10, 1, 2, 0.85);
+            padding: 20px;
+            border-radius: 4px;
+            border: 1px solid rgba(139, 0, 0, 0.4);
+            border-left: 4px solid var(--blood-red);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.8);
+            transition: all 0.3s ease;
+        }
+
+        .meta-item:hover {
+            border-left-color: var(--bright-blood);
+            background: rgba(25, 2, 4, 0.95);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 0, 0, 0.3);
+        }
+
+        .meta-item strong {
+            display: block;
+            color: var(--bright-blood);
+            font-family: var(--font-sub);
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .meta-value {
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        /* GALLERY */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 22px;
+        }
+
+        .gallery-item {
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid var(--blood-dark);
+            background-color: #000;
+            aspect-ratio: 16 / 9;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.9);
+            transition: all 0.4s ease;
+        }
+
+        .gallery-item::after {
+            content: '';
+            position: absolute;
+            top:0; left:0; right:0; bottom:0;
+            background: radial-gradient(circle, transparent 40%, rgba(0, 0, 0, 0.8) 100%);
+            pointer-events: none;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.04);
+            border-color: var(--bright-blood);
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.6);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            opacity: 0.65;
+            filter: grayscale(60%) contrast(1.2);
+            transition: all 0.4s ease;
+        }
+
+        .gallery-item:hover img {
+            opacity: 1;
+            filter: grayscale(0%) contrast(1.1);
+        }
+
+        /* DOWNLOAD SECTION */
+        .download-zone {
+            text-align: center;
+            background: radial-gradient(circle at center, rgba(60, 0, 0, 0.8) 0%, rgba(5, 0, 1, 0.98) 100%);
+            padding: 60px 25px;
+            border-radius: 8px;
+            border: 2px solid var(--bright-blood);
+            box-shadow: 0 0 50px rgba(255, 0, 0, 0.4), inset 0 0 30px rgba(0, 0, 0, 0.9);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .download-zone h2 {
+            justify-content: center;
+            border-bottom: none;
+            padding-bottom: 0;
+            font-size: 2.5rem;
+            color: var(--bright-blood);
+            text-shadow: 0 0 20px var(--bright-blood), 4px 4px 0px #000;
+            margin-bottom: 15px;
+        }
+
+        .download-zone p {
+            color: var(--text-blood);
+            margin-bottom: 35px;
+            font-size: 1.3rem;
+            font-family: var(--font-sub);
+            letter-spacing: 1px;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 20px 42px;
+            font-family: var(--font-sub);
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            min-width: 270px;
+            position: relative;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.9);
+        }
+
+        /* Game Jolt Button */
+        .btn-jolt {
+            background: linear-gradient(180deg, #164019 0%, #081a0a 100%);
+            color: #83f389;
+            border: 2px solid #287a2f;
+            text-shadow: 0 0 8px rgba(40, 122, 47, 0.8);
+        }
+
+        .btn-jolt:hover {
+            background: linear-gradient(180deg, #236327 0%, #0d2a10 100%);
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 0 30px rgba(40, 122, 47, 0.8);
+            border-color: #42c74d;
+            color: #ffffff;
+        }
+
+        /* Itch.io Button */
+        .btn-itch {
+            background: linear-gradient(180deg, #8b0000 0%, #3a0000 100%);
+            color: #ffb3b3;
+            border: 2px solid var(--bright-blood);
+            text-shadow: 0 0 8px rgba(255, 0, 0, 0.8);
+            animation: pulseBtn 2s infinite alternate;
+        }
+
+        @keyframes pulseBtn {
+            0% { box-shadow: 0 0 15px rgba(255, 0, 0, 0.4); }
+            100% { box-shadow: 0 0 35px rgba(255, 0, 0, 0.9); }
+        }
+
+        .btn-itch:hover {
+            background: linear-gradient(180deg, #b30000 0%, #500000 100%);
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 0 45px rgba(255, 0, 0, 1);
+            border-color: #ff5e5e;
+            color: #ffffff;
+        }
+
+        /* FOOTER */
+        footer {
+            margin-top: 90px;
+            border-top: 2px solid var(--blood-dark);
+            padding-top: 35px;
+            text-align: center;
+            color: rgba(214, 167, 167, 0.6);
+            font-size: 1rem;
+        }
+
+        footer strong {
+            color: var(--bright-blood);
+            font-family: var(--font-sub);
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+
+        footer p.warning {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: #5a3d3d;
+            font-style: italic;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            h2 { font-size: 1.2rem; }
+            .download-zone h2 { font-size: 1.8rem; }
+            .btn { width: 100%; font-size: 1.1rem; }
+            .horror-box { padding: 20px; font-size: 1rem; }
+        }
+    </style>
+
+    <!-- METADATA FOR GOOGLE -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "VideoGame",
+      "name": "The Silence: The Forest",
+      "description": "A first-person psychological horror survival game where players explore a dark, reactive forest and survive an entity lurking in the shadows.",
+      "genre": ["Horror", "Survival horror", "Indie game"],
+      "author": {
+        "@type": "Organization",
+        "name": "SilenDev"
+      },
+      "datePublished": "2026-02-19",
+      "gamePlatform": ["PC", "Windows"],
+      "applicationCategory": "Game",
+      "operatingSystem": "Windows",
+      "offers": {
+        "@type": "Offer",
+        "price": "0.00",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
+      }
+    }
+    </script>
+</head>
+<body>
+
+    <!-- HEADER WITH LOGO -->
+    <header>
+        <div class="logo-container">
+            <img src="/TSTF/Title_birefnet.png" alt="The Silence: The Forest Logo" class="game-logo">
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- 1. GAME OVERVIEW -->
+        <section class="overview">
+            <h2><i class="fa-solid fa-biohazard"></i> THE NIGHTMARE BEGINS</h2>
+            <div class="horror-box">
+                <p>
+                    <span class="highlight-text">Silence will not save you.</span> <strong>The Silence: The Forest</strong> is an immersive extreme psychological horror survival experience built in Unity. You have been abandoned in the suffocating density of a pitch-black forest where every crackle is a death sentence.
+                </p>
+                <p>
+                    The environment listens. The hostile entity lurking in the fog reacts directly to your sound emissions, your breath, and your movement speed. Your sole objective is to track down lost notes to piece together the tragic history of the woods before you are hunted down. Version <span class="highlight-text">v1.0</span> introduces the ruthless <em>Hunter Mode</em>, a completely purged interface, and a 3D positional audio system optimized for headphones.
+                </p>
+            </div>
+        </section>
+
+        <!-- 2. OFFICIAL YOUTUBE TRAILER -->
+        <section class="trailer">
+            <h2><i class="fa-solid fa-tape"></i> OFFICIAL VIDEO LOG</h2>
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/2-an__2vpmM" 
+                        title="The Silence: The Forest - Official Trailer" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        allowfullscreen>
+                </iframe>
+            </div>
+        </section>
+
+        <!-- 3. DEVELOPMENT SPECS -->
+        <section class="specs">
+            <h2><i class="fa-solid fa-dna"></i> EXPERIMENT DATA</h2>
+            <div class="game-meta">
+                <div class="meta-item">
+                    <strong>Developer</strong>
+                    <div class="meta-value">SilenDev</div>
+                </div>
+                <div class="meta-item">
+                    <strong>Release Date</strong>
+                    <div class="meta-value">Feb 19, 2026</div>
+                </div>
+                <div class="meta-item">
+                    <strong>Version</strong>
+                    <div class="meta-value">v1.0 (Hunter Mode)</div>
+                </div>
+                <div class="meta-item">
+                    <strong>Platform</strong>
+                    <div class="meta-value">PC (Windows)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. SCREENSHOTS GALLERY -->
+        <section class="gallery">
+            <h2><i class="fa-solid fa-eye"></i> RECOVERED EVIDENCE</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <img src="/TSTF/Captura del juego 1.png" alt="The Silence: The Forest Screenshot 1">
+                </div>
+                <div class="gallery-item">
+                    <img src="/TSTF/Captura del juego 2.png" alt="The Silence: The Forest Screenshot 2">
+                </div>
+                <div class="gallery-item">
+                    <img src="/TSTF/Captura unica del juego.png" alt="The Silence: The Forest Screenshot 3">
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. DOWNLOAD SECTION -->
+        <section class="download-zone">
+            <h2><i class="fa-solid fa-skull-crossbones"></i> DOWNLOAD IF YOU DARE!</h2>
+            <p>Step into the dark before the night consumes you.</p>
+            <div class="btn-group">
+                <a href="https://gamejolt.com" target="_blank" class="btn btn-jolt">
+                    <i class="fa-solid fa-ghost"></i> Game Jolt
+                </a>
+                <a href="https://itch.io" target="_blank" class="btn btn-itch">
+                    <i class="fa-solid fa-skull"></i> Itch.io
+                </a>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer>
+            <p>&copy; 2026 <strong>SilenDev</strong>. Developed with Unity Engine.</p>
+            <p class="warning">Best experienced in a dark room with headphones. Not recommended for the faint of heart.</p>
+        </footer>
+
+    </div>
+
+</body>
+</html>
