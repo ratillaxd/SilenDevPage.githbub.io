@@ -1,578 +1,751 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Silence: The Forest - SilenDev Official Horror Experience</title>
-    <meta name="description" content="Official technical profile for The Silence: The Forest, an extreme first-person psychological horror survival game developed by SilenDev in Unity.">
+    <title>The Silence: The Forest — Classified Dossier</title>
 
-    <!-- Icono en formato PNG (Ruta con ../ para salir de SubPagina) -->
     <link rel="icon" type="image/png" href="../Images/TS Icon.png">
 
-    <!-- HORROR FONTS & ICONS -->
+    <!-- FONTS & ICONS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Eater&family=Nosifer&family=Special+Elite&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Nosifer&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
-            --bg-black: #020001;
+            --bg-desk: #050304;
+            --folder-bg: #1c1815;
+            --folder-border: #3d3128;
+            --paper-bg: #12100e;
             --blood-red: #8b0000;
-            --bright-blood: #ff0000;
-            --blood-dark: #3a0000;
-            --fog-gray: #1a1617;
-            --text-blood: #d6a7a7;
-            --text-bright: #f3ecec;
-            --font-horror: 'Nosifer', cursive;
-            --font-sub: 'Creepster', cursive;
-            --font-body: 'Special Elite', monospace;
+            --blood-bright: #ff1a1a;
+            --text-main: #d4ceb8;
+            --text-muted: #8a8275;
+            --font-typewriter: 'Special Elite', monospace;
+            --font-heading: 'Nosifer', cursive;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            cursor: crosshair;
-        }
-
-        /* DARK AND RED SCROLLBAR */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #000;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--blood-red);
-            box-shadow: 0 0 10px var(--bright-blood);
         }
 
         body {
-            background-color: var(--bg-black);
-            background-image: 
-                radial-gradient(circle at center, rgba(139, 0, 0, 0.25) 0%, rgba(2, 0, 1, 0.98) 100%),
-                repeating-linear-gradient(0deg, rgba(0,0,0,0.1), rgba(0,0,0,0.1) 1px, transparent 1px, transparent 2px);
-            background-attachment: fixed;
-            color: var(--text-bright);
-            font-family: var(--font-body);
-            font-size: 1.15rem;
-            line-height: 1.7;
-            padding-bottom: 80px;
+            background-color: var(--bg-desk);
+            color: var(--text-main);
+            font-family: var(--font-typewriter);
+            min-height: 100vh;
             overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             position: relative;
+            padding: 20px;
         }
 
-        /* EXTREME VIGNETTE & HORROR SCANLINES */
-        body::before {
-            content: " ";
-            display: block;
+        /* FLASHLIGHT OVERLAY */
+        .flashlight-overlay {
             position: fixed;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: 
-                radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.95) 90%),
-                linear-gradient(180deg, rgba(255, 0, 0, 0.03) 50%, rgba(0,0,0,0.4) 50%);
-            background-size: 100% 100%, 100% 4px;
+            inset: 0;
             pointer-events: none;
             z-index: 999;
-            animation: flickerVignette 0.15s infinite alternate;
+            background: radial-gradient(circle 340px at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+                        transparent 0%, 
+                        rgba(0, 0, 0, 0.75) 60%, 
+                        rgba(0, 0, 0, 0.98) 100%);
         }
 
-        @keyframes flickerVignette {
-            0% { opacity: 0.92; }
-            100% { opacity: 1; }
+        /* CORNER BRANDING */
+        .corner-logo {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
         }
 
-        /* MAIN CONTAINER */
-        .container {
-            max-width: 950px;
+        .corner-logo img {
+            width: 40px;
+            height: auto;
+            filter: drop-shadow(0 0 6px rgba(255, 0, 0, 0.5));
+            transition: transform 0.3s;
+        }
+
+        .corner-logo img:hover {
+            transform: scale(1.1);
+        }
+
+        /* FIXED 3D DOSSIER WRAPPER */
+        .dossier-wrapper {
+            perspective: 1500px;
+            width: 100%;
+            max-width: 880px;
+            height: 620px;
             margin: 0 auto;
-            padding: 20px;
             position: relative;
             z-index: 10;
         }
 
-        /* HEADER & LOGO */
-        header {
-            padding: 80px 20px 40px 20px;
+        .dossier-folder {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: var(--folder-bg);
+            border: 2px solid var(--folder-border);
+            border-radius: 8px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-
-        .logo-container {
-            position: relative;
-            display: inline-block;
-        }
-
-        .game-logo {
-            max-width: 520px;
-            width: 100%;
-            height: auto;
-            filter: drop-shadow(0 0 20px rgba(255, 0, 0, 0.8)) contrast(1.2);
-            animation: glitchEffect 3s infinite alternate;
-        }
-
-        /* GLITCH EFFECT */
-        @keyframes glitchEffect {
-            0% {
-                transform: translate(0);
-                filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.7));
-            }
-            92% {
-                transform: translate(0);
-            }
-            94% {
-                transform: translate(-3px, 2px) skewX(2deg);
-                filter: drop-shadow(-5px 0 25px rgba(255, 0, 0, 1));
-            }
-            96% {
-                transform: translate(3px, -1px) skewX(-2deg);
-                filter: drop-shadow(5px 0 25px rgba(139, 0, 0, 1));
-            }
-            98% {
-                transform: translate(-1px, -2px);
-            }
-            100% {
-                transform: translate(0);
-                filter: drop-shadow(0 0 30px rgba(255, 0, 0, 0.9));
-            }
-        }
-
-        /* SECTIONS & HEADINGS */
-        section {
-            margin-bottom: 70px;
-            position: relative;
-        }
-
-        h2 {
-            color: var(--bright-blood);
-            font-family: var(--font-horror);
-            font-size: 1.6rem;
-            margin-bottom: 25px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            text-shadow: 0 0 15px var(--bright-blood), 3px 3px 0px #000;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            border-bottom: 2px solid var(--blood-dark);
-            padding-bottom: 12px;
-        }
-
-        h2 i {
-            color: var(--bright-blood);
-            font-size: 1.8rem;
-            animation: pulseBlood 2s infinite alternate;
-        }
-
-        @keyframes pulseBlood {
-            0% { transform: scale(1); filter: drop-shadow(0 0 2px var(--bright-blood)); }
-            100% { transform: scale(1.15); filter: drop-shadow(0 0 12px var(--bright-blood)); }
-        }
-
-        /* CONTENT BOXES */
-        .horror-box {
-            background: linear-gradient(135deg, rgba(20, 2, 4, 0.9) 0%, rgba(5, 0, 1, 0.95) 100%);
-            padding: 35px;
-            border-radius: 4px;
-            border: 1px solid var(--blood-dark);
-            box-shadow: 0 0 35px rgba(0, 0, 0, 0.95), inset 0 0 20px rgba(139, 0, 0, 0.2);
-            position: relative;
             overflow: hidden;
         }
 
-        .horror-box::before {
-            content: '';
+        /* COVER PAGE */
+        .folder-cover {
             position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 3px;
-            background: linear-gradient(90deg, transparent, var(--bright-blood), transparent);
-            box-shadow: 0 0 10px var(--bright-blood);
-        }
-
-        .horror-box p {
-            margin-bottom: 20px;
-            color: var(--text-bright);
-            text-shadow: 1px 1px 2px #000;
-        }
-
-        .horror-box p:last-child {
-            margin-bottom: 0;
-        }
-
-        .highlight-text {
-            color: var(--bright-blood);
-            font-weight: bold;
-            font-family: var(--font-sub);
-            font-size: 1.3rem;
-            letter-spacing: 1px;
-        }
-
-        /* YOUTUBE VIDEO CONTAINER */
-        .video-container {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%;
-            height: 0;
+            inset: 0;
+            background: linear-gradient(135deg, #241e1a 0%, #120e0c 100%);
             border-radius: 6px;
-            overflow: hidden;
-            border: 2px solid var(--blood-red);
-            box-shadow: 0 0 40px rgba(139, 0, 0, 0.5), 0 0 10px #000 inset;
-            background: #000;
-            transition: all 0.4s ease;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.05);
+            z-index: 20;
+            transform-origin: left;
+            transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+            backface-visibility: hidden;
+            cursor: pointer;
+            box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.8);
         }
 
-        .video-container:hover {
-            border-color: var(--bright-blood);
-            box-shadow: 0 0 50px rgba(255, 0, 0, 0.8);
-        }
-
-        .video-container iframe {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            border: 0;
-            filter: contrast(1.1) brightness(0.9);
-        }
-
-        /* TECHNICAL METADATA */
-        .game-meta {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
-        .meta-item {
-            background: rgba(10, 1, 2, 0.85);
-            padding: 20px;
-            border-radius: 4px;
-            border: 1px solid rgba(139, 0, 0, 0.4);
-            border-left: 4px solid var(--blood-red);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.8);
-            transition: all 0.3s ease;
-        }
-
-        .meta-item:hover {
-            border-left-color: var(--bright-blood);
-            background: rgba(25, 2, 4, 0.95);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(255, 0, 0, 0.3);
-        }
-
-        .meta-item strong {
-            display: block;
-            color: var(--bright-blood);
-            font-family: var(--font-sub);
-            font-size: 1.1rem;
-            margin-bottom: 6px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .meta-value {
-            color: #ffffff;
-            font-size: 1.1rem;
-            font-weight: bold;
-        }
-
-        /* GALLERY */
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-            gap: 22px;
-        }
-
-        .gallery-item {
-            border-radius: 4px;
-            overflow: hidden;
-            border: 1px solid var(--blood-dark);
-            background-color: #000;
-            aspect-ratio: 16 / 9;
-            position: relative;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.9);
-            transition: all 0.4s ease;
-        }
-
-        .gallery-item::after {
-            content: '';
-            position: absolute;
-            top:0; left:0; right:0; bottom:0;
-            background: radial-gradient(circle, transparent 40%, rgba(0, 0, 0, 0.8) 100%);
+        .dossier-folder.open .folder-cover {
+            transform: rotateY(-140deg);
             pointer-events: none;
         }
 
-        .gallery-item:hover {
-            transform: scale(1.04);
-            border-color: var(--bright-blood);
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.6);
-        }
-
-        .gallery-item img {
+        .cover-top-info {
             width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .stamp-classified {
+            border: 3px solid var(--blood-red);
+            color: var(--blood-bright);
+            padding: 6px 16px;
+            font-size: 1rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            transform: rotate(-3deg);
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+
+        .property-stamp {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            border: 1px dashed var(--text-muted);
+            padding: 5px 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transform: rotate(4deg);
+            background: rgba(0,0,0,0.3);
+        }
+
+        .cover-game-logo {
+            max-width: 450px;
+            width: 80%;
+            height: auto;
+            filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.9));
+        }
+
+        .open-btn {
+            background: var(--blood-red);
+            color: #fff;
+            border: 1px solid var(--blood-bright);
+            padding: 12px 28px;
+            font-family: var(--font-typewriter);
+            font-size: 0.95rem;
+            letter-spacing: 2px;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 0 15px rgba(139, 0, 0, 0.6);
+            transition: all 0.3s;
+        }
+
+        .open-btn:hover {
+            background: var(--blood-bright);
+            transform: scale(1.05);
+        }
+
+        /* INSIDE CONTAINER */
+        .folder-inside {
+            padding: 30px;
             height: 100%;
-            object-fit: cover;
-            display: block;
-            opacity: 0.65;
-            filter: grayscale(60%) contrast(1.2);
-            transition: all 0.4s ease;
+            display: none;
+            flex-direction: column;
+            opacity: 0;
+            transition: opacity 0.5s ease 0.4s;
         }
 
-        .gallery-item:hover img {
+        .dossier-folder.open .folder-inside {
+            display: flex;
             opacity: 1;
-            filter: grayscale(0%) contrast(1.1);
         }
 
-        /* DOWNLOAD SECTION */
-        .download-zone {
-            text-align: center;
-            background: radial-gradient(circle at center, rgba(60, 0, 0, 0.8) 0%, rgba(5, 0, 1, 0.98) 100%);
-            padding: 60px 25px;
-            border-radius: 8px;
-            border: 2px solid var(--bright-blood);
-            box-shadow: 0 0 50px rgba(255, 0, 0, 0.4), inset 0 0 30px rgba(0, 0, 0, 0.9);
-            position: relative;
-            overflow: hidden;
+        /* TABS NAVIGATION (AJUSTADAS PARA MAYOR VISIBILIDAD) */
+        .folder-tabs {
+            display: flex;
+            gap: 10px;
+            border-bottom: 2px solid var(--blood-red);
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            overflow-x: auto;
+            white-space: nowrap;
         }
 
-        .download-zone h2 {
-            justify-content: center;
-            border-bottom: none;
-            padding-bottom: 0;
-            font-size: 2.5rem;
-            color: var(--bright-blood);
-            text-shadow: 0 0 20px var(--bright-blood), 4px 4px 0px #000;
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--folder-border);
+            color: var(--text-main);
+            padding: 10px 18px;
+            font-family: var(--font-typewriter);
+            font-size: 0.85rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+
+        .tab-btn:hover, .tab-btn.active {
+            color: var(--blood-bright);
+            border-color: var(--blood-red);
+            background: rgba(139, 0, 0, 0.3);
+            box-shadow: 0 0 10px rgba(139, 0, 0, 0.4);
+        }
+
+        /* SCROLLABLE INNER PAGE AREA */
+        .page-viewport {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-viewport::-webkit-scrollbar {
+            width: 6px;
+        }
+        .page-viewport::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.5);
+        }
+        .page-viewport::-webkit-scrollbar-thumb {
+            background: var(--blood-red);
+            border-radius: 3px;
+        }
+
+        .page-content {
+            display: none;
+            height: 100%;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .page-content.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .file-title {
+            color: var(--blood-bright);
+            font-size: 1rem;
             margin-bottom: 15px;
-        }
-
-        .download-zone p {
-            color: var(--text-blood);
-            margin-bottom: 35px;
-            font-size: 1.3rem;
-            font-family: var(--font-sub);
+            border-bottom: 1px solid var(--blood-red);
+            padding-bottom: 4px;
             letter-spacing: 1px;
         }
 
-        .btn-group {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 30px;
+        /* INFO & LORE SECTION */
+        .info-header-box {
+            background: var(--paper-bg);
+            border: 1px solid var(--folder-border);
+            padding: 18px;
+            margin-bottom: 15px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
         }
 
-        .btn {
+        .info-meta-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            border-bottom: 1px dashed var(--blood-dark);
+            padding-bottom: 12px;
+            margin-bottom: 12px;
+        }
+
+        .info-meta-item {
+            font-size: 0.9rem;
+        }
+
+        .info-meta-item strong {
+            color: var(--blood-bright);
+        }
+
+        .platform-badge {
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            gap: 12px;
-            padding: 20px 42px;
-            font-family: var(--font-sub);
-            font-size: 1.3rem;
-            font-weight: bold;
-            text-decoration: none;
-            border-radius: 4px;
-            transition: all 0.3s ease;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            min-width: 270px;
+            gap: 8px;
+        }
+
+        .platform-icon {
+            width: 18px;
+            height: 18px;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+        }
+
+        .synopsis-box {
+            background: var(--paper-bg);
+            border: 1px solid var(--folder-border);
+            padding: 20px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+            line-height: 1.7;
+            flex: 1;
+        }
+
+        .synopsis-text {
+            color: var(--text-main);
+            font-size: 0.95rem;
+            text-align: justify;
+            margin-bottom: 12px;
+        }
+
+        /* TRAILER SECTION */
+        .trailer-container {
             position: relative;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.9);
+            padding-bottom: 52%;
+            height: 0;
+            border: 1px solid var(--blood-red);
         }
 
-        /* Game Jolt Button */
-        .btn-jolt {
-            background: linear-gradient(180deg, #164019 0%, #081a0a 100%);
-            color: #83f389;
-            border: 2px solid #287a2f;
-            text-shadow: 0 0 8px rgba(40, 122, 47, 0.8);
+        .trailer-container iframe {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
         }
 
-        .btn-jolt:hover {
-            background: linear-gradient(180deg, #236327 0%, #0d2a10 100%);
-            transform: translateY(-5px) scale(1.03);
-            box-shadow: 0 0 30px rgba(40, 122, 47, 0.8);
-            border-color: #42c74d;
-            color: #ffffff;
+        /* GALLERY SECTION (CONTENIDO ADAPTADO) */
+        .gallery-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            height: 100%;
+            justify-content: space-between;
         }
 
-        /* Itch.io Button */
-        .btn-itch {
-            background: linear-gradient(180deg, #8b0000 0%, #3a0000 100%);
-            color: #ffb3b3;
-            border: 2px solid var(--bright-blood);
-            text-shadow: 0 0 8px rgba(255, 0, 0, 0.8);
-            animation: pulseBtn 2s infinite alternate;
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
         }
 
-        @keyframes pulseBtn {
-            0% { box-shadow: 0 0 15px rgba(255, 0, 0, 0.4); }
-            100% { box-shadow: 0 0 35px rgba(255, 0, 0, 0.9); }
+        .photo-frame {
+            background: #e8e2d5;
+            padding: 8px 8px 24px 8px;
+            transform: rotate(-1deg);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.8);
+            transition: transform 0.3s;
+            cursor: pointer;
         }
 
-        .btn-itch:hover {
-            background: linear-gradient(180deg, #b30000 0%, #500000 100%);
-            transform: translateY(-5px) scale(1.03);
-            box-shadow: 0 0 45px rgba(255, 0, 0, 1);
-            border-color: #ff5e5e;
-            color: #ffffff;
+        .photo-frame:nth-child(even) {
+            transform: rotate(2deg);
         }
 
-        /* FOOTER */
-        footer {
-            margin-top: 90px;
-            border-top: 2px solid var(--blood-dark);
-            padding-top: 35px;
-            text-align: center;
-            color: rgba(214, 167, 167, 0.6);
-            font-size: 1rem;
+        .photo-frame:hover {
+            transform: scale(1.05) rotate(0deg);
+            z-index: 5;
         }
 
-        footer strong {
-            color: var(--bright-blood);
-            font-family: var(--font-sub);
-            font-size: 1.1rem;
-            letter-spacing: 1px;
+        .photo-frame img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(130%) sepia(20%);
         }
 
-        footer p.warning {
-            margin-top: 10px;
+        .evidence-notes-box {
+            background: var(--paper-bg);
+            border: 1px solid var(--folder-border);
+            padding: 15px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
             font-size: 0.85rem;
-            color: #5a3d3d;
-            font-style: italic;
+            color: var(--text-muted);
+            line-height: 1.5;
         }
 
-        /* RESPONSIVE */
+        /* DEPLOYMENT & STORES (CONTENIDO ADAPTADO) */
+        .deployment-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            height: 100%;
+            justify-content: space-between;
+        }
+
+        .deploy-specs-box {
+            background: var(--paper-bg);
+            border: 1px solid var(--folder-border);
+            padding: 18px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+        }
+
+        .deploy-specs-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .spec-item {
+            border: 1px dashed var(--folder-border);
+            padding: 10px;
+            background: rgba(0,0,0,0.3);
+        }
+
+        .spec-item label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .spec-item span {
+            font-size: 0.9rem;
+            color: var(--blood-bright);
+            font-weight: bold;
+        }
+
+        .platforms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .stamp-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 16px 15px;
+            border: 2px dashed var(--blood-bright);
+            color: var(--text-main);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+            background: rgba(139, 0, 0, 0.12);
+            transition: all 0.3s;
+        }
+
+        .stamp-btn:hover {
+            background: var(--blood-red);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(255, 26, 26, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .store-logo-img {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+        }
+
+        /* IMAGE MODAL */
+        .image-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .image-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .image-modal img {
+            max-width: 90%;
+            max-height: 80vh;
+            border: 2px solid var(--blood-red);
+            box-shadow: 0 0 30px rgba(255, 26, 26, 0.5);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: var(--font-typewriter);
+        }
+
+        /* MOBILE OPTIMIZATIONS */
         @media (max-width: 768px) {
-            h2 { font-size: 1.2rem; }
-            .download-zone h2 { font-size: 1.8rem; }
-            .btn { width: 100%; font-size: 1.1rem; }
-            .horror-box { padding: 20px; font-size: 1rem; }
+            body { padding: 10px; }
+            .dossier-wrapper { height: 580px; }
+            .folder-inside { padding: 18px; }
+            .folder-cover { padding: 20px; }
+            .stamp-classified { font-size: 0.85rem; padding: 4px 10px; }
+            .property-stamp { font-size: 0.65rem; }
+            .cover-game-logo { max-width: 320px; }
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+            .photo-frame img { height: 110px; }
+            .deploy-specs-grid { grid-template-columns: 1fr; }
+            .platforms-grid { grid-template-columns: 1fr; }
         }
     </style>
-
-    <!-- METADATA FOR GOOGLE -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "VideoGame",
-      "name": "The Silence: The Forest",
-      "description": "A first-person psychological horror survival game where players explore a dark, reactive forest and survive an entity lurking in the shadows.",
-      "genre": ["Horror", "Survival horror", "Indie game"],
-      "author": {
-        "@type": "Organization",
-        "name": "SilenDev"
-      },
-      "datePublished": "2026-02-19",
-      "gamePlatform": ["PC", "Windows"],
-      "applicationCategory": "Game",
-      "operatingSystem": "Windows",
-      "offers": {
-        "@type": "Offer",
-        "price": "0.00",
-        "priceCurrency": "USD",
-        "availability": "https://schema.org/InStock"
-      }
-    }
-    </script>
 </head>
 <body>
 
-    <!-- HEADER WITH LOGO -->
-    <header>
-        <div class="logo-container">
-            <img src="../TSTF/Title_birefnet.png" alt="The Silence: The Forest Logo" class="game-logo">
-        </div>
-    </header>
+    <!-- FLASHLIGHT OVERLAY -->
+    <div class="flashlight-overlay" id="flashlight"></div>
 
-    <div class="container">
+    <!-- CORNER BRANDING -->
+    <a href="../index.html" class="corner-logo" title="Home">
+        <img src="../Images/TS Icon.png" alt="SilenDev Logo">
+    </a>
 
-        <!-- 1. GAME OVERVIEW -->
-        <section class="overview">
-            <h2><i class="fa-solid fa-biohazard"></i> THE NIGHTMARE BEGINS</h2>
-            <div class="horror-box">
-                <p>
-                    <span class="highlight-text">Silence will not save you.</span> <strong>The Silence: The Forest</strong> is an immersive extreme psychological horror survival experience built in Unity. You have been abandoned in the suffocating density of a pitch-black forest where every crackle is a death sentence.
-                </p>
-                <p>
-                    The environment listens. The hostile entity lurking in the fog reacts directly to your sound emissions, your breath, and your movement speed. Your sole objective is to track down lost notes to piece together the tragic history of the woods before you are hunted down. Version <span class="highlight-text">v1.0</span> introduces the ruthless <em>Hunter Mode</em>, a completely purged interface, and a 3D positional audio system optimized for headphones.
-                </p>
-            </div>
-        </section>
-
-        <!-- 2. OFFICIAL YOUTUBE TRAILER -->
-        <section class="trailer">
-            <h2><i class="fa-solid fa-tape"></i> OFFICIAL VIDEO LOG</h2>
-            <div class="video-container">
-                <iframe src="https://www.youtube.com/embed/2-an__2vpmM" 
-                        title="The Silence: The Forest - Official Trailer" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        allowfullscreen>
-                </iframe>
-            </div>
-        </section>
-
-        <!-- 3. DEVELOPMENT SPECS -->
-        <section class="specs">
-            <h2><i class="fa-solid fa-dna"></i> EXPERIMENT DATA</h2>
-            <div class="game-meta">
-                <div class="meta-item">
-                    <strong>Developer</strong>
-                    <div class="meta-value">SilenDev</div>
-                </div>
-                <div class="meta-item">
-                    <strong>Release Date</strong>
-                    <div class="meta-value">Feb 19, 2026</div>
-                </div>
-                <div class="meta-item">
-                    <strong>Version</strong>
-                    <div class="meta-value">v1.0 (Hunter Mode)</div>
-                </div>
-                <div class="meta-item">
-                    <strong>Platform</strong>
-                    <div class="meta-value">PC (Windows)</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 4. SCREENSHOTS GALLERY -->
-        <section class="gallery">
-            <h2><i class="fa-solid fa-eye"></i> RECOVERED EVIDENCE</h2>
-            <div class="gallery-grid">
-                <div class="gallery-item">
-                    <img src="../TSTF/Captura del juego 1.png" alt="The Silence: The Forest Screenshot 1">
-                </div>
-                <div class="gallery-item">
-                    <img src="../TSTF/Captura del juego 2.png" alt="The Silence: The Forest Screenshot 2">
-                </div>
-                <div class="gallery-item">
-                    <img src="../TSTF/Captura unica del juego.png" alt="The Silence: The Forest Screenshot 3">
-                </div>
-            </div>
-        </section>
-
-        <!-- 5. DOWNLOAD SECTION -->
-        <section class="download-zone">
-            <h2><i class="fa-solid fa-skull-crossbones"></i> DOWNLOAD IF YOU DARE!</h2>
-            <p>Step into the dark before the night consumes you.</p>
-            <div class="btn-group">
-                <a href="https://gamejolt.com/games/TSTF/1050544" target="_blank" class="btn btn-jolt">
-                    <i class="fa-solid fa-ghost"></i> Game Jolt
-                </a>
-                <a href="https://ratilla7131.itch.io/the-silence" target="_blank" class="btn btn-itch">
-                    <i class="fa-solid fa-skull"></i> Itch.io
-                </a>
-            </div>
-        </section>
-
-        <!-- FOOTER -->
-        <footer>
-            <p>&copy; 2026 <strong>SilenDev</strong>. Developed with Unity Engine.</p>
-            <p class="warning">Best experienced in a dark room with headphones. Not recommended for the faint of heart.</p>
-        </footer>
-
+    <!-- IMAGE EXPANSION MODAL -->
+    <div class="image-modal" id="imageModal" onclick="closeModal()">
+        <button class="close-modal">&times;</button>
+        <img id="modalImg" src="" alt="Evidence Enlarged">
     </div>
 
+    <!-- MAIN DOSSIER WRAPPER -->
+    <div class="dossier-wrapper">
+        <div class="dossier-folder" id="dossierFolder">
+
+            <!-- COVER PAGE (CLOSED STATE) -->
+            <div class="folder-cover" id="folderCover">
+                <div class="cover-top-info">
+                    <div class="stamp-classified">CONFIDENTIAL // TOP SECRET</div>
+                    <div class="property-stamp">Property of SilenDev</div>
+                </div>
+                
+                <!-- GAME TITLE LOGO -->
+                <img src="../TSTF/Title_birefnet.png" alt="The Silence: The Forest Logo" class="cover-game-logo">
+
+                <button class="open-btn" onclick="openFolder()">OPEN DOSSIER</button>
+            </div>
+
+            <!-- INNER CONTENT -->
+            <div class="folder-inside">
+                
+                <!-- NAVIGATION TABS -->
+                <div class="folder-tabs">
+                    <button class="tab-btn active" onclick="switchTab('lore', event)">01. Incident Report</button>
+                    <button class="tab-btn" onclick="switchTab('trailer', event)">02. VHS Log</button>
+                    <button class="tab-btn" onclick="switchTab('gallery', event)">03. Evidence</button>
+                    <button class="tab-btn" onclick="switchTab('platforms', event)">04. Deployment</button>
+                </div>
+
+                <!-- SCROLLABLE VIEWPORT -->
+                <div class="page-viewport">
+
+                    <!-- PAGE 1: REPORT & SYNOPSIS -->
+                    <div class="page-content active" id="tab-lore">
+                        <div class="info-header-box">
+                            <div class="info-meta-row">
+                                <div class="info-meta-item">
+                                    <strong>Release Date:</strong> Feb 19, 2026
+                                </div>
+                                <div class="info-meta-item">
+                                    <strong>Developer:</strong> SilenDev
+                                </div>
+                                <div class="info-meta-item">
+                                    <strong>Engine:</strong> Unity Engine
+                                </div>
+                            </div>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                                <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">Target System:</span>
+                                
+                                <div class="platform-badge">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Windows_icon_logo.png?utm_source=es.wikipedia.org&utm_campaign=index&utm_content=original" class="platform-icon" alt="Windows">
+                                    <span style="font-size: 0.85rem;">Windows PC</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="synopsis-box">
+                            <h3 class="file-title">SURVEILLANCE REPORT // SYNOPSIS</h3>
+                            
+                            <p class="synopsis-text">
+                                <strong>The Silence: The Forest</strong> is an immersive first-person psychological horror experience set deep within an unmapped, suffocating forest. An entity stalks your every movement relentlessly from the thick timberline shadows.
+                            </p>
+                            <p class="synopsis-text">
+                                Your objective appears deceptively straightforward: navigate the dark expanse, retrieve 5 critical artifacts, and escape with your life. However, the anomaly dynamically adapts to your actions—visibility drops to absolute zero, and even the faintest noise triggers a lethal confrontation.
+                            </p>
+                            <p class="synopsis-text" style="color: var(--blood-bright); margin-bottom: 0;">
+                                Mind the essential rule of this domain: silence is never safe.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- PAGE 2: VHS TRAILER -->
+                    <div class="page-content" id="tab-trailer">
+                        <h3 class="file-title" style="margin-bottom: 15px;">RECOVERED SURVEILLANCE TAPE</h3>
+                        <div class="trailer-container">
+                            <iframe src="https://www.youtube.com/embed/2-an__2vpmM" title="The Silence Trailer" allowfullscreen></iframe>
+                        </div>
+                    </div>
+
+                    <!-- PAGE 3: EVIDENCE GALLERY (CONTENIDO QUE LLENA LA CARPETA) -->
+                    <div class="page-content" id="tab-gallery">
+                        <div class="gallery-container">
+                            <div>
+                                <h3 class="file-title" style="margin-bottom: 15px;">ATTACHED PHOTOGRAPHS (CLICK TO ENLARGE)</h3>
+                                <div class="gallery-grid">
+                                    <div class="photo-frame" onclick="openModal('https://media.indiedb.com/images/games/1/94/93832/captura-del-juego-1-kacidhc8.png')">
+                                        <img src="https://media.indiedb.com/images/games/1/94/93832/captura-del-juego-1-kacidhc8.png" alt="Evidence 1">
+                                    </div>
+                                    <div class="photo-frame" onclick="openModal('https://media.indiedb.com/images/games/1/94/93832/captura-del-juego-2-xxazvhmv.png')">
+                                        <img src="https://media.indiedb.com/images/games/1/94/93832/captura-del-juego-2-xxazvhmv.png" alt="Evidence 2">
+                                    </div>
+                                    <div class="photo-frame" onclick="openModal('https://media.indiedb.com/images/games/1/94/93832/captura-de-pantalla-962-ybejnsei.png')">
+                                        <img src="https://media.indiedb.com/images/games/1/94/93832/captura-de-pantalla-962-ybejnsei.png" alt="Evidence 3">
+                                    </div>
+                                    <div class="photo-frame" onclick="openModal('https://media.indiedb.com/images/games/1/94/93832/captura-de-pantalla-963-tyrjz8aw.png')">
+                                        <img src="https://media.indiedb.com/images/games/1/94/93832/captura-de-pantalla-963-tyrjz8aw.png" alt="Evidence 4">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="evidence-notes-box">
+                                <strong style="color: var(--blood-bright);">FIELD NOTES // DOSSIER FILE #736:</strong>
+                                <p style="margin-top: 5px;">Photographic artifacts captured during initial recon. Thermal variance indicates an active entity inhabiting sector B-4. High frequency audio distortion reported near key locations.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PAGE 4: DOWNLOAD & STORES (CONTENIDO QUE LLENA LA CARPETA) -->
+                    <div class="page-content" id="tab-platforms">
+                        <div class="deployment-container">
+                            <div class="deploy-specs-box">
+                                <h3 class="file-title" style="margin-bottom: 10px;">TACTICAL DEPLOYMENT SPECS</h3>
+                                <div class="deploy-specs-grid">
+                                    <div class="spec-item">
+                                        <label>Build Status</label>
+                                        <span>v1.0 (Stable)</span>
+                                    </div>
+                                    <div class="spec-item">
+                                        <label>License Type</label>
+                                        <span>Free / Indie Release</span>
+                                    </div>
+                                    <div class="spec-item">
+                                        <label>Audio Mode</label>
+                                        <span>3D Positional Audio</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 class="file-title" style="text-align: center; margin-bottom: 15px;">AUTHORIZATION & DISPATCH STORES</h3>
+                                <div class="platforms-grid">
+                                    <!-- Game Jolt -->
+                                    <a href="https://gamejolt.com/games/TSTF/1050544" target="_blank" class="stamp-btn">
+                                        <img src="https://raw.githubusercontent.com/murikistudio/game-jolt-api/master/addons/gamejolt/icon.png" class="store-logo-img" alt="Game Jolt"> Game Jolt
+                                    </a>
+                                    <!-- Itch.io -->
+                                    <a href="https://ratilla7131.itch.io/the-silence" target="_blank" class="stamp-btn">
+                                        <i class="fa-brands fa-itch-io" style="font-size: 20px;"></i> Itch.io
+                                    </a>
+                                    <!-- indiexpo -->
+                                    <a href="#" target="_blank" class="stamp-btn">
+                                        <img src="https://www.indiexpo.net/assets/sprites/logo-929c7b9e.png" class="store-logo-img" alt="indiexpo"> indiexpo
+                                    </a>
+                                    <!-- IndieDB -->
+                                    <a href="#" target="_blank" class="stamp-btn">
+                                        <img src="https://media.indiedb.com/images/global/indiedb_black.png" class="store-logo-img" alt="IndieDB"> IndieDB
+                                    </a>
+                                    <!-- Raccreative -->
+                                    <a href="#" target="_blank" class="stamp-btn" style="grid-column: span 2;">
+                                        <img src="https://raccreative.s3.eu-central-1.amazonaws.com/media/logoblue.png" class="store-logo-img" alt="Raccreative"> Raccreative Games
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- INTERACTIVE LOGIC -->
+    <script>
+        // FLASHLIGHT MOUSE TRACKING
+        const flashlight = document.getElementById('flashlight');
+        document.addEventListener('mousemove', (e) => {
+            flashlight.style.setProperty('--mouse-x', e.clientX + 'px');
+            flashlight.style.setProperty('--mouse-y', e.clientY + 'px');
+        });
+
+        // OPEN DOSSIER
+        function openFolder() {
+            document.getElementById('dossierFolder').classList.add('open');
+        }
+
+        // SWITCH TABS
+        function switchTab(tabId, event) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.page-content').forEach(page => page.classList.remove('active'));
+
+            if (event) event.currentTarget.classList.add('active');
+            document.getElementById('tab-' + tabId).classList.add('active');
+        }
+
+        // IMAGE MODAL
+        function openModal(imgSrc) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImg');
+            modalImg.src = imgSrc;
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').classList.remove('active');
+        }
+    </script>
 </body>
 </html>
