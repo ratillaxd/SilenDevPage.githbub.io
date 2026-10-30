@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy | SilenDev</title>
+
+    <!-- Icono en formato PNG -->
+    <link rel="icon" type="image/png" href="Images/SilenDevLogo.png">
+    
+    <!-- Tailwind CSS for a clean and modern design -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0b0b0f',
+                        cardBg: '#121218',
+                        accent: '#00f0ff',
+                        accentHover: '#33f3ff',
+                        textMuted: '#94a3b8'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            scroll-behavior: smooth;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0b0f;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #22222b;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00f0ff;
+        }
+
+        /* Cyber Flash Scanlines */
+        .cyber-flash {
+            position: relative;
+            overflow: hidden;
+        }
+        .cyber-flash::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -50%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(
+                to right,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(0, 240, 255, 0.1) 30%,
+                rgba(0, 240, 255, 0.4) 50%,
+                rgba(0, 240, 255, 0.1) 70%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: translateX(-100%) rotate(45deg);
+            transition: all 0.6s ease;
+            pointer-events: none;
+        }
+        .cyber-flash:hover::after {
+            transform: translateX(100%) rotate(45deg);
+        }
+
+        /* Smooth Reveal Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        .reveal-node {
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        /* Ambient Glow Pulse */
+        @keyframes ambientPulse {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.1); }
+        }
+        .glow-orb {
+            animation: ambientPulse 8s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-darkBg text-white min-h-screen flex flex-col justify-between selection:bg-accent selection:text-black relative overflow-x-hidden">
+
+    <!-- Ambient Background Lighting -->
+    <div class="fixed top-[-10%] left-[-10%] w-[500px] h-[500px] bg-accent/10 rounded-full blur-[120px] pointer-events-none glow-orb z-0"></div>
+    <div class="fixed bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-accent/5 rounded-full blur-[140px] pointer-events-none glow-orb z-0" style="animation-delay: -4s;"></div>
+
+    <!-- Navigation -->
+    <nav class="border-b border-zinc-900 sticky top-0 bg-darkBg/90 backdrop-blur-md z-50 px-6 py-4">
+        <div class="max-w-4xl mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-lg font-extrabold tracking-wider bg-gradient-to-r from-white via-zinc-200 to-accent bg-clip-text text-transparent hover:opacity-90 transition-opacity">
+                SILENDEV
+            </a>
+            <div class="flex gap-5 text-xs font-semibold tracking-wide text-textMuted">
+                <a href="index.html" class="cyber-flash px-3 py-1.5 rounded-lg border border-zinc-800 bg-cardBg hover:border-accent hover:text-accent transition-all duration-300 flex items-center gap-1.5">
+                    <span>&larr;</span> Back to Home
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-3xl mx-auto px-6 py-12 space-y-8 flex-grow w-full relative z-10">
+
+        <!-- Header -->
+        <section class="border-b border-zinc-900/80 pb-6 reveal-node" style="animation-delay: 100ms;">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-accent/20 bg-accent/10 text-accent text-xs font-semibold tracking-wider uppercase mb-4">
+                <span class="w-2 h-2 rounded-full bg-accent animate-ping"></span>
+                Official Legal Notice
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2 bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">
+                Privacy Policy
+            </h1>
+            <p class="text-textMuted text-xs font-mono">Last updated: 2026</p>
+        </section>
+
+        <!-- Privacy Overview Card -->
+        <section class="bg-cardBg/80 backdrop-blur-sm p-6 sm:p-8 rounded-xl border border-zinc-900 relative overflow-hidden shadow-xl shadow-black/40 hover:border-accent/50 transition-colors duration-500 reveal-node" style="animation-delay: 200ms;">
+            <div class="absolute top-0 left-0 w-1 h-full bg-accent shadow-[0_0_15px_#00f0ff]"></div>
+            <h2 class="text-sm font-bold uppercase tracking-widest text-accent mb-2">Overview</h2>
+            <p class="text-zinc-300 text-sm leading-relaxed">
+                Welcome to SilenDev. This Privacy Policy applies to all games, software applications, and interactive content developed by SilenDev (including <em>The Silence: The Forest</em>). Your privacy is respected, and my projects are designed to operate with maximum transparency and data minimalization.
+            </p>
+        </section>
+
+        <!-- Detailed Policy Sections -->
+        <section class="space-y-6 reveal-node" style="animation-delay: 300ms;">
+            
+            <div class="p-6 bg-cardBg/40 border border-zinc-900/60 rounded-xl hover:border-zinc-800 transition-all duration-300 space-y-3">
+                <h3 class="text-white font-bold text-base flex items-center gap-2">
+                    <span class="w-1.5 h-4 bg-accent rounded-full"></span> 1. Data Collection & Usage
+                </h3>
+                <p class="text-zinc-400 text-sm leading-relaxed pl-3.5 border-l border-zinc-800/60">
+                    My games do not collect, capture, store, or transmit any personal identifiable information (PII), geographic location data, or sensitive user information. All game states, settings, and player progress are saved locally on your own machine.
+                </p>
+            </div>
+
+            <div class="p-6 bg-cardBg/40 border border-zinc-900/60 rounded-xl hover:border-zinc-800 transition-all duration-300 space-y-3">
+                <h3 class="text-white font-bold text-base flex items-center gap-2">
+                    <span class="w-1.5 h-4 bg-accent rounded-full"></span> 2. Third-Party Platforms
+                </h3>
+                <p class="text-zinc-400 text-sm leading-relaxed pl-3.5 border-l border-zinc-800/60">
+                    When downloading or purchasing titles through digital storefronts (such as the Microsoft Store, itch.io, or Game Jolt), those individual platforms may collect telemetry or diagnostic logs according to their respective independent privacy terms.
+                </p>
+            </div>
+
+            <div class="p-6 bg-cardBg/40 border border-zinc-900/60 rounded-xl hover:border-zinc-800 transition-all duration-300 space-y-3">
+                <h3 class="text-white font-bold text-base flex items-center gap-2">
+                    <span class="w-1.5 h-4 bg-accent rounded-full"></span> 3. Contact & Support
+                </h3>
+                <p class="text-zinc-400 text-sm leading-relaxed pl-3.5 border-l border-zinc-800/60">
+                    If you have questions regarding this Privacy Policy or any technical aspects of my games, feel free to reach out directly through any of my verified social media profiles linked on the main site.
+                </p>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-zinc-900 py-8 px-6 text-center text-xs text-textMuted bg-black/40 relative z-10">
+        <p>&copy; 2026 SilenDev. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
