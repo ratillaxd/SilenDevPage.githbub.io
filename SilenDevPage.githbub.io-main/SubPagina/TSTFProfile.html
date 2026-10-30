@@ -1,0 +1,751 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Silence: The Forest — Classified Dossier</title>
+
+    <link rel="icon" type="image/png" href="../Images/TS Icon.png">
+
+    <!-- FONTS & ICONS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Nosifer&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-desk: #050304;
+            --folder-bg: #1c1815;
+            --folder-border: #3d3128;
+            --paper-bg: #12100e;
+            --blood-red: #8b0000;
+            --blood-bright: #ff1a1a;
+            --text-main: #d4ceb8;
+            --text-muted: #8a8275;
+            --font-typewriter: 'Special Elite', monospace;
+            --font-heading: 'Nosifer', cursive;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-desk);
+            color: var(--text-main);
+            font-family: var(--font-typewriter);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 20px;
+        }
+
+        /* FLASHLIGHT OVERLAY */
+        .flashlight-overlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 999;
+            background: radial-gradient(circle 340px at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+                        transparent 0%, 
+                        rgba(0, 0, 0, 0.75) 60%, 
+                        rgba(0, 0, 0, 0.98) 100%);
+        }
+
+        /* CORNER BRANDING */
+        .corner-logo {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+
+        .corner-logo img {
+            width: 40px;
+            height: auto;
+            filter: drop-shadow(0 0 6px rgba(255, 0, 0, 0.5));
+            transition: transform 0.3s;
+        }
+
+        .corner-logo img:hover {
+            transform: scale(1.1);
+        }
+
+        /* FIXED 3D DOSSIER WRAPPER */
+        .dossier-wrapper {
+            perspective: 1500px;
+            width: 100%;
+            max-width: 880px;
+            height: 620px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .dossier-folder {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: var(--folder-bg);
+            border: 2px solid var(--folder-border);
+            border-radius: 8px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* COVER PAGE */
+        .folder-cover {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #241e1a 0%, #120e0c 100%);
+            border-radius: 6px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.05);
+            z-index: 20;
+            transform-origin: left;
+            transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+            backface-visibility: hidden;
+            cursor: pointer;
+            box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.8);
+        }
+
+        .dossier-folder.open .folder-cover {
+            transform: rotateY(-140deg);
+            pointer-events: none;
+        }
+
+        .cover-top-info {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .stamp-classified {
+            border: 3px solid var(--blood-red);
+            color: var(--blood-bright);
+            padding: 6px 16px;
+            font-size: 1rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            transform: rotate(-3deg);
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+
+        .property-stamp {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            border: 1px dashed var(--text-muted);
+            padding: 5px 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transform: rotate(4deg);
+            background: rgba(0,0,0,0.3);
+        }
+
+        .cover-game-logo {
+            max-width: 450px;
+            width: 80%;
+            height: auto;
+            filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.9));
+        }
+
+        .open-btn {
+            background: var(--blood-red);
+            color: #fff;
+            border: 1px solid var(--blood-bright);
+            padding: 12px 28px;
+            font-family: var(--font-typewriter);
+            font-size: 0.95rem;
+            letter-spacing: 2px;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 0 15px rgba(139, 0, 0, 0.6);
+            transition: all 0.3s;
+        }
+
+        .open-btn:hover {
+            background: var(--blood-bright);
+            transform: scale(1.05);
+        }
+
+        /* INSIDE CONTAINER */
+        .folder-inside {
+            padding: 30px;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            opacity: 0;
+            transition: opacity 0.5s ease 0.4s;
+        }
+
+        .dossier-folder.open .folder-inside {
+            display: flex;
+            opacity: 1;
+        }
+
+        /* TABS NAVIGATION (AJUSTADAS PARA MAYOR VISIBILIDAD) */
+        .folder-tabs {
+            display: flex;
+            gap: 10px;
+            border-bottom: 2px solid var(--blood-red);
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--folder-border);
+            color: var(--text-main);
+            padding: 10px 18px;
+            font-family: var(--font-typewriter);
+            font-size: 0.85rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+
+        .tab-btn:hover, .tab-btn.active {
+            color: var(--blood-bright);
+            border-color: var(--blood-red);
+            background: rgba(139, 0, 0, 0.3);
+            box-shadow: 0 0 10px rgba(139, 0, 0, 0.4);
+        }
+
+        /* SCROLLABLE INNER PAGE AREA */
+        .page-viewport {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-viewport::-webkit-scrollbar {
+            width: 6px;
+        }
+        .page-viewport::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.5);
+        }
+        .page-viewport::-webkit-scrollbar-thumb {
+            background: var(--blood-red);
+            border-radius: 3px;
+        }
+
+        .page-content {
+            display: none;
+            height: 100%;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .page-content.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .file-title {
+            color: var(--blood-bright);
+            font-size: 1rem;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--blood-red);
+            padding-bottom: 4px;
+            letter-spacing: 1px;
+        }
+
+        /* INFO & LORE SECTION */
+        .info-header-box {
+            background: var(--paper-bg);
+            border: 1px solid var(--folder-border);
+            padding: 18px;
+            margin-bottom: 15px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+        }
+
+        .info-meta-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            border-bottom: 1px dashed var(--blood-dark);
+            padding-bottom: 12px;
+            margin-bottom: 12px;
+        }
+
+        .info-meta-item {
+            font-size: 0.9rem;
+        }
+
+        .info-meta-item strong {
+            color: var(--blood-bright);
+        }
+
+        .platform-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .platform-icon {
+            width: 18px;
+            height: 18px;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+        }
+
+        .synopsis-box {
+            background: var(--paper-bg);
+            border: 1px solid var(--folder-border);
+            padding: 20px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+            line-height: 1.7;
+            flex: 1;
+        }
+
+        .synopsis-text {
+            color: var(--text-main);
+            font-size: 0.95rem;
+            text-align: justify;
+            margin-bottom: 12px;
+        }
+
+        /* TRAILER SECTION */
+        .trailer-container {
+            position: relative;
+            padding-bottom: 52%;
+            height: 0;
+            border: 1px solid var(--blood-red);
+        }
+
+        .trailer-container iframe {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        /* GALLERY SECTION (CONTENIDO ADAPTADO) */
+        .gallery-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            height: 100%;
+            justify-content: space-between;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .photo-frame {
+            background: #e8e2d5;
+            padding: 8px 8px 24px 8px;
+            transform: rotate(-1deg);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.8);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .photo-frame:nth-child(even) {
+            transform: rotate(2deg);
+        }
+
+        .photo-frame:hover {
+            transform: scale(1.05) rotate(0deg);
+            z-index: 5;
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(130%) sepia(20%);
+        }
+
+        .evidence-notes-box {
+            background: var(--paper-bg);
+            border: 1px solid var(--folder-border);
+            padding: 15px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* DEPLOYMENT & STORES (CONTENIDO ADAPTADO) */
+        .deployment-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            height: 100%;
+            justify-content: space-between;
+        }
+
+        .deploy-specs-box {
+            background: var(--paper-bg);
+            border: 1px solid var(--folder-border);
+            padding: 18px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+        }
+
+        .deploy-specs-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .spec-item {
+            border: 1px dashed var(--folder-border);
+            padding: 10px;
+            background: rgba(0,0,0,0.3);
+        }
+
+        .spec-item label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .spec-item span {
+            font-size: 0.9rem;
+            color: var(--blood-bright);
+            font-weight: bold;
+        }
+
+        .platforms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .stamp-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 16px 15px;
+            border: 2px dashed var(--blood-bright);
+            color: var(--text-main);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+            background: rgba(139, 0, 0, 0.12);
+            transition: all 0.3s;
+        }
+
+        .stamp-btn:hover {
+            background: var(--blood-red);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(255, 26, 26, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .store-logo-img {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+        }
+
+        /* IMAGE MODAL */
+        .image-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .image-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .image-modal img {
+            max-width: 90%;
+            max-height: 80vh;
+            border: 2px solid var(--blood-red);
+            box-shadow: 0 0 30px rgba(255, 26, 26, 0.5);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: var(--font-typewriter);
+        }
+
+        /* MOBILE OPTIMIZATIONS */
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .dossier-wrapper { height: 580px; }
+            .folder-inside { padding: 18px; }
+            .folder-cover { padding: 20px; }
+            .stamp-classified { font-size: 0.85rem; padding: 4px 10px; }
+            .property-stamp { font-size: 0.65rem; }
+            .cover-game-logo { max-width: 320px; }
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+            .photo-frame img { height: 110px; }
+            .deploy-specs-grid { grid-template-columns: 1fr; }
+            .platforms-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- FLASHLIGHT OVERLAY -->
+    <div class="flashlight-overlay" id="flashlight"></div>
+
+    <!-- CORNER BRANDING -->
+    <a href="../index.html" class="corner-logo" title="Home">
+        <img src="../Images/TS Icon.png" alt="SilenDev Logo">
+    </a>
+
+    <!-- IMAGE EXPANSION MODAL -->
+    <div class="image-modal" id="imageModal" onclick="closeModal()">
+        <button class="close-modal">&times;</button>
+        <img id="modalImg" src="" alt="Evidence Enlarged">
+    </div>
+
+    <!-- MAIN DOSSIER WRAPPER -->
+    <div class="dossier-wrapper">
+        <div class="dossier-folder" id="dossierFolder">
+
+            <!-- COVER PAGE (CLOSED STATE) -->
+            <div class="folder-cover" id="folderCover">
+                <div class="cover-top-info">
+                    <div class="stamp-classified">CONFIDENTIAL // TOP SECRET</div>
+                    <div class="property-stamp">Property of SilenDev</div>
+                </div>
+                
+                <!-- GAME TITLE LOGO -->
+                <img src="../TSTF/Title_birefnet.png" alt="The Silence: The Forest Logo" class="cover-game-logo">
+
+                <button class="open-btn" onclick="openFolder()">OPEN DOSSIER</button>
+            </div>
+
+            <!-- INNER CONTENT -->
+            <div class="folder-inside">
+                
+                <!-- NAVIGATION TABS -->
+                <div class="folder-tabs">
+                    <button class="tab-btn active" onclick="switchTab('lore', event)">01. Incident Report</button>
+                    <button class="tab-btn" onclick="switchTab('trailer', event)">02. VHS Log</button>
+                    <button class="tab-btn" onclick="switchTab('gallery', event)">03. Evidence</button>
+                    <button class="tab-btn" onclick="switchTab('platforms', event)">04. Deployment</button>
+                </div>
+
+                <!-- SCROLLABLE VIEWPORT -->
+                <div class="page-viewport">
+
+                    <!-- PAGE 1: REPORT & SYNOPSIS -->
+                    <div class="page-content active" id="tab-lore">
+                        <div class="info-header-box">
+                            <div class="info-meta-row">
+                                <div class="info-meta-item">
+                                    <strong>Release Date:</strong> Feb 19, 2026
+                                </div>
+                                <div class="info-meta-item">
+                                    <strong>Developer:</strong> SilenDev
+                                </div>
+                                <div class="info-meta-item">
+                                    <strong>Engine:</strong> Unity Engine
+                                </div>
+                            </div>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                                <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">Target System:</span>
+                                
+                                <div class="platform-badge">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Windows_icon_logo.png?utm_source=es.wikipedia.org&utm_campaign=index&utm_content=original" class="platform-icon" alt="Windows">
+                                    <span style="font-size: 0.85rem;">Windows PC</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="synopsis-box">
+                            <h3 class="file-title">SURVEILLANCE REPORT // SYNOPSIS</h3>
+                            
+                            <p class="synopsis-text">
+                                <strong>The Silence: The Forest</strong> is an immersive first-person psychological horror experience set deep within an unmapped, suffocating forest. An entity stalks your every movement relentlessly from the thick timberline shadows.
+                            </p>
+                            <p class="synopsis-text">
+                                Your objective appears deceptively straightforward: navigate the dark expanse, retrieve 5 critical artifacts, and escape with your life. However, the anomaly dynamically adapts to your actions—visibility drops to absolute zero, and even the faintest noise triggers a lethal confrontation.
+                            </p>
+                            <p class="synopsis-text" style="color: var(--blood-bright); margin-bottom: 0;">
+                                Mind the essential rule of this domain: silence is never safe.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- PAGE 2: VHS TRAILER -->
+                    <div class="page-content" id="tab-trailer">
+                        <h3 class="file-title" style="margin-bottom: 15px;">RECOVERED SURVEILLANCE TAPE</h3>
+                        <div class="trailer-container">
+                            <iframe src="https://www.youtube.com/embed/2-an__2vpmM" title="The Silence Trailer" allowfullscreen></iframe>
+                        </div>
+                    </div>
+
+                    <!-- PAGE 3: EVIDENCE GALLERY (CONTENIDO QUE LLENA LA CARPETA) -->
+                    <div class="page-content" id="tab-gallery">
+                        <div class="gallery-container">
+                            <div>
+                                <h3 class="file-title" style="margin-bottom: 15px;">ATTACHED PHOTOGRAPHS (CLICK TO ENLARGE)</h3>
+                                <div class="gallery-grid">
+                                    <div class="photo-frame" onclick="openModal('https://media.indiedb.com/images/games/1/94/93832/captura-del-juego-1-kacidhc8.png')">
+                                        <img src="https://media.indiedb.com/images/games/1/94/93832/captura-del-juego-1-kacidhc8.png" alt="Evidence 1">
+                                    </div>
+                                    <div class="photo-frame" onclick="openModal('https://media.indiedb.com/images/games/1/94/93832/captura-del-juego-2-xxazvhmv.png')">
+                                        <img src="https://media.indiedb.com/images/games/1/94/93832/captura-del-juego-2-xxazvhmv.png" alt="Evidence 2">
+                                    </div>
+                                    <div class="photo-frame" onclick="openModal('https://media.indiedb.com/images/games/1/94/93832/captura-de-pantalla-962-ybejnsei.png')">
+                                        <img src="https://media.indiedb.com/images/games/1/94/93832/captura-de-pantalla-962-ybejnsei.png" alt="Evidence 3">
+                                    </div>
+                                    <div class="photo-frame" onclick="openModal('https://media.indiedb.com/images/games/1/94/93832/captura-de-pantalla-963-tyrjz8aw.png')">
+                                        <img src="https://media.indiedb.com/images/games/1/94/93832/captura-de-pantalla-963-tyrjz8aw.png" alt="Evidence 4">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="evidence-notes-box">
+                                <strong style="color: var(--blood-bright);">FIELD NOTES // DOSSIER FILE #736:</strong>
+                                <p style="margin-top: 5px;">Photographic artifacts captured during initial recon. Thermal variance indicates an active entity inhabiting sector B-4. High frequency audio distortion reported near key locations.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PAGE 4: DOWNLOAD & STORES (CONTENIDO QUE LLENA LA CARPETA) -->
+                    <div class="page-content" id="tab-platforms">
+                        <div class="deployment-container">
+                            <div class="deploy-specs-box">
+                                <h3 class="file-title" style="margin-bottom: 10px;">TACTICAL DEPLOYMENT SPECS</h3>
+                                <div class="deploy-specs-grid">
+                                    <div class="spec-item">
+                                        <label>Build Status</label>
+                                        <span>v1.0 (Stable)</span>
+                                    </div>
+                                    <div class="spec-item">
+                                        <label>License Type</label>
+                                        <span>Free / Indie Release</span>
+                                    </div>
+                                    <div class="spec-item">
+                                        <label>Audio Mode</label>
+                                        <span>3D Positional Audio</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 class="file-title" style="text-align: center; margin-bottom: 15px;">AUTHORIZATION & DISPATCH STORES</h3>
+                                <div class="platforms-grid">
+                                    <!-- Game Jolt -->
+                                    <a href="https://gamejolt.com/games/TSTF/1050544" target="_blank" class="stamp-btn">
+                                        <img src="https://raw.githubusercontent.com/murikistudio/game-jolt-api/master/addons/gamejolt/icon.png" class="store-logo-img" alt="Game Jolt"> Game Jolt
+                                    </a>
+                                    <!-- Itch.io -->
+                                    <a href="https://ratilla7131.itch.io/the-silence" target="_blank" class="stamp-btn">
+                                        <i class="fa-brands fa-itch-io" style="font-size: 20px;"></i> Itch.io
+                                    </a>
+                                    <!-- indiexpo -->
+                                    <a href="#" target="_blank" class="stamp-btn">
+                                        <img src="https://www.indiexpo.net/assets/sprites/logo-929c7b9e.png" class="store-logo-img" alt="indiexpo"> indiexpo
+                                    </a>
+                                    <!-- IndieDB -->
+                                    <a href="#" target="_blank" class="stamp-btn">
+                                        <img src="https://media.indiedb.com/images/global/indiedb_black.png" class="store-logo-img" alt="IndieDB"> IndieDB
+                                    </a>
+                                    <!-- Raccreative -->
+                                    <a href="#" target="_blank" class="stamp-btn" style="grid-column: span 2;">
+                                        <img src="https://raccreative.s3.eu-central-1.amazonaws.com/media/logoblue.png" class="store-logo-img" alt="Raccreative"> Raccreative Games
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- INTERACTIVE LOGIC -->
+    <script>
+        // FLASHLIGHT MOUSE TRACKING
+        const flashlight = document.getElementById('flashlight');
+        document.addEventListener('mousemove', (e) => {
+            flashlight.style.setProperty('--mouse-x', e.clientX + 'px');
+            flashlight.style.setProperty('--mouse-y', e.clientY + 'px');
+        });
+
+        // OPEN DOSSIER
+        function openFolder() {
+            document.getElementById('dossierFolder').classList.add('open');
+        }
+
+        // SWITCH TABS
+        function switchTab(tabId, event) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.page-content').forEach(page => page.classList.remove('active'));
+
+            if (event) event.currentTarget.classList.add('active');
+            document.getElementById('tab-' + tabId).classList.add('active');
+        }
+
+        // IMAGE MODAL
+        function openModal(imgSrc) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImg');
+            modalImg.src = imgSrc;
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').classList.remove('active');
+        }
+    </script>
+</body>
+</html>
